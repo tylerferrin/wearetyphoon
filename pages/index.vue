@@ -5,12 +5,19 @@
       <div class="closeVideo" @click="play = !play">X</div>
       <iframe id="video" width="100%" height="100%" src="//www.youtube.com/embed/qUJYqhKZrwA?autoplay=1&showinfo=0&controls=0" frameborder="0" allowfullscreen />
     </div>
-    <nav>
+    <nav v-bind:class="{addBorder: showingHiddenLinks}">
       <a href="#" @click="playToggle()" v-if="!play" class="link">PLAY</a>
       <a href="#" @click="playToggle()" v-if="play" class="link">STOP</a>
       <a href="#" @click="listenUp()" class="link">LISTEN</a>
       <a href="http://typhoon.merchline.com/" class="link">STORE</a>
+      <p @click="showHiddenLinks()"> + </p>
     </nav>
+    <ul class="navExtender" v-bind:class="{ linkDisplay: !showingHiddenLinks }">
+      <li>a</li>
+      <li>B</li>
+      <li>C</li>
+      <li>D</li>
+    </ul>
     <div class="showListContainer">
       <div class="showList" v-if="listen" v-bind:class="{ fadeIn: listen }">
         <table>
@@ -44,6 +51,7 @@ export default {
     return {
       play: false,
       listen: false,
+      showingHiddenLinks: false,
       listenUp: () => {
         this.play = false
         this.listen = !this.listen
@@ -51,6 +59,9 @@ export default {
       playToggle: () => {
         this.play = !this.play
         this.listen = false
+      },
+      showHiddenLinks: () => {
+        this.showingHiddenLinks = !this.showingHiddenLinks
       }
     }
   },
@@ -106,13 +117,14 @@ body
   animation-fill-mode: forwards
 
 nav
-  position: relative
+  position: absolute
   top: 90.5vh
   right: 9.5vw
   display: flex
   flex-direction: row
   justify-content: flex-end
   z-index: 6
+  padding-bottom: 10px
   a
     padding: 0 25px
     font-size: 12px
@@ -121,6 +133,42 @@ nav
     &:hover
       color: white
       text-decoration: none
+  p
+    color: white
+    padding: 0 25px
+
+.addBorder
+  border-bottom: 2px solid white
+
+.navExtender
+  padding: 0
+  margin: 0
+  color: white
+  display: inline-block
+  list-style-type: none
+  position: absolute
+  top: 94.5vh
+  right: 9.5vw
+  z-index: 6
+li
+  position: relative
+  top: 15px
+  padding: 0 25px
+  display: inline-block
+  float: right
+li:first-of-type
+  padding-right: 25px
+p
+  display: inline-block
+  position: relative
+  top: -3px
+  margin: 0
+  &:hover
+    cursor: pointer
+
+.linkDisplay
+  display: none
+
 
 @keyframes fadeIn
   0%
@@ -128,17 +176,9 @@ nav
   100%
     opacity: 1
 
-@keyframes dropDown
-  from
-    transform: translateY(-500%)
-  to
-    transform: translateyY(0)
-
-.isPlaying
-  display: none
-  transition: 5s
-
 .showListContainer
+  position: absolute
+  top: -14px
   height: 100vh
   width: 100vw
   display: flex
