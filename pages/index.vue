@@ -1,31 +1,35 @@
 <template>
   <section class="container">
-    <div class="moon-container">
-      <div class="video-container" v-if="play">
-        <div class="closeVideo" @click="play = !play">X</div>
-        <iframe id="video" width="100%" height="100%" src="//www.youtube.com/embed/qUJYqhKZrwA?autoplay=1&showinfo=0&controls=1" frameborder="0" allowfullscreen />
-      </div>
+    <div class="moon-container" v-bind:class="{fadeIn: !play}"></div>
+    <div class="video-container" v-if="play" v-bind:class="{fadeIn: play}">
+      <div class="closeVideo" @click="play = !play">X</div>
+      <iframe id="video" width="100%" height="100%" src="//www.youtube.com/embed/qUJYqhKZrwA?autoplay=1&showinfo=0&controls=0" frameborder="0" allowfullscreen />
     </div>
-    <nav v-if="!play">
-      <a href="#" @click="play = !play" class="link">PLAY</a>
-      <a href="#" class="link">LISTEN</a>
-      <a href="#" class="link">STORE</a>
+    <nav>
+      <a href="#" @click="playToggle()" v-if="!play" class="link">PLAY</a>
+      <a href="#" @click="playToggle()" v-if="play" class="link">STOP</a>
+      <a href="#" @click="listenUp()" class="link">LISTEN</a>
+      <a href="http://typhoon.merchline.com/" class="link">STORE</a>
     </nav>
-    <div class="showList">
-      <table>
-        <tr>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td></td>
-        </tr>
-        <tr v-for="show in shows">
-          <td>{{ show.date }}</td>
-          <td>{{ show.venue }}</td>
-          <td>{{ show.city }}</td>
-          <td><a :href="show.linkToPurchase"> TICKETS </a></td>
-        </tr>
-      </table>
+    <div class="showListContainer">
+      <div class="showList" v-if="listen" v-bind:class="{ fadeIn: listen }">
+        <table>
+          <tbody>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr v-for="show in shows">
+              <td>{{ show.date }}</td>
+              <td>{{ show.venue }}</td>
+              <td>{{ show.city }}</td>
+              <td><a :href="show.linkToPurchase" class="tickets"> Tickets </a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </section>
 </template>
@@ -38,7 +42,16 @@ import moment from 'moment'
 export default {
   data () {
     return {
-      play: false
+      play: false,
+      listen: false,
+      listenUp: () => {
+        this.play = false
+        this.listen = !this.listen
+      },
+      playToggle: () => {
+        this.play = !this.play
+        this.listen = false
+      }
     }
   },
   asyncData (context) {
@@ -70,9 +83,9 @@ export default {
 
 <style lang="sass">
 body
-  font-family: 'Times New Roman'
   background-color: black
-  letter-spacing: 1px
+  letter-spacing: 2px
+  margin: 0
 
 .container
   min-height: 100vh
@@ -83,17 +96,23 @@ body
     background-position: center
     min-height: 100vh
     min-width: 100vw
-    animation-name: fadeIn
-    animation-duration: 30s
     position: absolute
+    z-index: 4
+
+.fadeIn
+  animation-name: fadeIn
+  animation-duration: 5s
+  animation-timing-function: ease-in-out
+  animation-fill-mode: forwards
 
 nav
   position: relative
-  top: 92.5vh
-  right: 7.5vw
+  top: 90.5vh
+  right: 9.5vw
   display: flex
   flex-direction: row
   justify-content: flex-end
+  z-index: 6
   a
     padding: 0 25px
     font-size: 12px
@@ -104,44 +123,66 @@ nav
       text-decoration: none
 
 @keyframes fadeIn
-  from
+  0%
     opacity: 0
-  to
+  100%
     opacity: 1
+
+@keyframes dropDown
+  from
+    transform: translateY(-500%)
+  to
+    transform: translateyY(0)
 
 .isPlaying
   display: none
   transition: 5s
 
-.showList
-  position: absolute
-  z-index: 50
-  color: red
-  table
-    border-collapse: collapse
-    margin: 25px
-  tr
-    border-bottom: 1px solid white
-    height: 50px
-  td
-    text-align: right
-    width: 25vw
-  a
-    color: red
-    text-decoration: none
-    &:hover
-      color: red
-
-#video
+.showListContainer
   height: 100vh
   width: 100vw
+  display: flex
+  flex-direction: column
+  align-items: center
+  justify-content: center
+  .showList
+    display: flex
+    flex-direction: row
+    justify-content: center
+    position: absolute
+    z-index: 50
+    color: red
+    table
+      border-collapse: collapse
+      margin: 0 05vw 0 15vw
+    tr
+      height: 50px
+    td
+      text-align: left
+      width: 20vw
+      font-family: 'Times New Roman', serif
+      font-size: 18px
+      -webkit-font-smoothing: antialiased
+    td a.tickets
+      text-align: right
+    a
+      color: red
+      text-decoration: none
+      &:hover
+        color: red
+
+.video-container
+  height: 100vh
+  width: 100vw
+  position: absolute
+  z-index: 5
 
 .closeVideo
   position: absolute
   top: 5vh
   right: 5vw
   color: white
-  font-size: 12px
+  font-size: 18px
   &:hover
     cursor: pointer
 
