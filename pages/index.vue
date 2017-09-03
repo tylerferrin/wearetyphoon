@@ -12,12 +12,20 @@
       <a href="#" class="link">STORE</a>
     </nav>
     <div class="showList">
-      <ul>
-        <li v-for="show in shows">
-          {{ show.date }} - {{ show.venue }} - {{ show.city }} -
-          <a :href="show.linkToPurchase"> TICKETS </a>
-        </li>
-      </ul>
+      <table>
+        <tr>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr v-for="show in shows">
+          <td>{{ show.date }}</td>
+          <td>{{ show.venue }}</td>
+          <td>{{ show.city }}</td>
+          <td><a :href="show.linkToPurchase"> TICKETS </a></td>
+        </tr>
+      </table>
     </div>
   </section>
 </template>
@@ -62,8 +70,9 @@ export default {
 
 <style lang="sass">
 body
-  font-family: "Helvetica", sans-serif
+  font-family: 'Times New Roman'
   background-color: black
+  letter-spacing: 1px
 
 .container
   min-height: 100vh
@@ -107,15 +116,21 @@ nav
 .showList
   position: absolute
   z-index: 50
-  ul
-    list-style-type: none
+  color: red
+  table
+    border-collapse: collapse
+    margin: 25px
+  tr
+    border-bottom: 1px solid white
+    height: 50px
+  td
+    text-align: right
+    width: 25vw
+  a
     color: red
-    li
-      a
-        color: red
-        text-decoration: none
-        &:hover
-          color: red
+    text-decoration: none
+    &:hover
+      color: red
 
 #video
   height: 100vh
