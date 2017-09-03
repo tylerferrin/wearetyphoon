@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 module.exports = {
   /*
   ** Headers of the page
@@ -17,6 +19,10 @@ module.exports = {
   ** Customize the progress-bar color
   */
   loading: { color: '#3B8070' },
+  env: {
+    spaceId: process.env.SPACE_ID,
+    accessToken: process.env.ACCESS_TOKEN
+  },
   /*
   ** Build configuration
   */
@@ -24,6 +30,7 @@ module.exports = {
     /*
     ** Run ESLINT on save
     */
+    vendor: ['contentful'],
     extend (config, ctx) {
       if (ctx.dev && ctx.isClient) {
         config.module.rules.push({
@@ -34,5 +41,5 @@ module.exports = {
         })
       }
     }
-  }
+  },
 }
