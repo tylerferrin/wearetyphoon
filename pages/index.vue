@@ -2,15 +2,14 @@
   <section class="container">
     <div class="moon-container" v-bind:class="{fadeIn: !play}"></div>
     <div class="video-container" v-if="play" v-bind:class="{fadeIn: play}">
-      <div class="closeVideo" @click="play = !play">X</div>
       <iframe id="video" width="100%" height="100%" src="//www.youtube.com/embed/qUJYqhKZrwA?autoplay=1&showinfo=0&controls=0" frameborder="0" allowfullscreen />
     </div>
     <nav v-bind:class="{addBorder: showingHiddenLinks}">
-      <a href="#" @click="playToggle()" v-if="!play" class="link">PLAY</a>
-      <a href="#" @click="playToggle()" v-if="play" class="link">STOP</a>
-      <a href="#" @click="listenUp()" class="link">LISTEN</a>
-      <a href="http://typhoon.merchline.com/" class="link">STORE</a>
-      <p @click="showHiddenLinks()"> + </p>
+      <a href="#" @click="playToggle()" v-if="!play" class="link playGlitch">PLAY</a>
+      <a href="#" @click="playToggle()" v-if="play" class="link stopGlitch">STOP</a>
+      <a href="#" @click="listenUp()" class="link listenGlitch">LISTEN</a>
+      <a href="http://typhoon.merchline.com/" class="link storeGlitch">STORE</a>
+      <p @click="showHiddenLinks()" class="moreOptionsGlitch"> + </p>
     </nav>
     <ul class="navExtender" v-bind:class="{ linkDisplay: !showingHiddenLinks }">
       <li>a</li>
@@ -127,7 +126,8 @@ nav
   padding-bottom: 10px
   a
     padding: 0 25px
-    font-size: 12px
+    font-size: 14px
+    letter-spacing: 2px
     color: white
     text-decoration: none
     &:hover
@@ -225,5 +225,71 @@ p
   font-size: 18px
   &:hover
     cursor: pointer
+
+@mixin glitchEffects($string)
+  margin: 0
+  text-decoration: none
+  color: #fff
+  &:before, &:after
+    position: absolute
+    display: inline-block
+    content: $string
+    opacity: .8
+  &:after
+    color: red
+    z-index: -2
+    left: 25px
+  &:before
+    color: yellow
+    z-index: -1
+  &:hover
+    &:before
+      animation: glitch .3s cubic-bezier(.25, .46, .45, .94) both infinite
+    &:after
+      animation: glitch .3s cubic-bezier(.25, .46, .45, .94) reverse both infinite
+
+@keyframes glitch
+  0%
+    transform: translate(0)
+  20%
+    transform: translate(-1.5px, 1.5px)
+  40%
+    transform: translate(-1.5px, -1.5px)
+  60%
+    transform: translate(1.5px, 1.5px)
+  80%
+    transform: translate(1.5px, -1.5px)
+  to
+    transform: translate(0)
+
+/// NAV GLITCH CLASSES
+.playGlitch
+  @include glitchEffects('PLAY')
+
+.stopGlitch
+  @include glitchEffects('STOP')
+
+.listenGlitch
+  @include glitchEffects('LISTEN')
+  &:after
+    left: 118.5px
+
+.storeGlitch
+  @include glitchEffects('STORE')
+  &:after
+    left: 228.5px
+
+.moreOptionsGlitch
+  @include glitchEffects('+')
+  &:after
+    left: 25px
+    bottom: 0px
+
+.xGlitch
+  @include glitchEffects('X')
+
+
+
+
 
 </style>
