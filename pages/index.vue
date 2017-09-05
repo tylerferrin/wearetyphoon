@@ -15,9 +15,9 @@
       <div v-bind:class="{ navBottomBorder: !hideHiddenLinks}"></div>
     </div>
     <ul class="navExtender" v-bind:class="{ hideLinkDisplay: hideHiddenLinks, fastFadeIn: !hideHiddenLinks }">
-      <li>Facebook</li>
-      <li>Instagram</li>
-      <li>Twitter</li>
+      <li><a href="#">Twitter</a></li>
+      <li><a href="#">Facebook</a></li>
+      <li><a href="#">Instagram</a></li>
     </ul>
     <div class="showListContainer">
       <div class="showList" v-if="listen" v-bind:class="{ fastFadeIn: listen }">
@@ -182,6 +182,12 @@ li
   padding: 0 0 0 25px
   display: inline-block
   float: right
+  a
+    color: white
+    text-decoration: none
+    &:hover, &:focus
+      color: white
+      text-decoration: none
 li:first-of-type
   padding-right: 25px
 p
@@ -208,6 +214,7 @@ p
 
 .navBottomBorder
   position: relative
+  top: -8px
   right: 25px
   height: 2px
   background: white
@@ -308,6 +315,7 @@ p
     display: inline-block
     content: $string
     opacity: .8
+    display: none
     @media screen and (max-width: 768px)
       display: none
   &:after
@@ -317,25 +325,34 @@ p
   &:before
     color: yellow
     z-index: -1
+    top: 1px
   &:hover
     &:before
+      display: block
       animation: glitch .3s cubic-bezier(.25, .46, .45, .94) both infinite
     &:after
+      display: inline-block
       animation: glitch .3s cubic-bezier(.25, .46, .45, .94) reverse both infinite
 
 @keyframes glitch
   0%
     transform: translate(0)
+    color: lighten(red, 20%)
   20%
-    transform: translate(-1px, 1px)
+    transform: translate(-1.5px, 1.5px)
+    color: pink
   40%
-    transform: translate(-1px, -1px)
+    transform: translate(-1.5px, -1.5px)
+    color: lighten(green, 30%)
   60%
-    transform: translate(1px, 1px)
+    transform: translate(1.5px, 1.5px)
+    color: lighten(purple, 30%)
   80%
-    transform: translate(1px, -1px)
+    transform: translate(1.5px, -1.5px)
+    color: lighten(blue, 30%)
   to
     transform: translate(0)
+    color: orange
 
 /// NAV GLITCH CLASSES
 .playGlitch
