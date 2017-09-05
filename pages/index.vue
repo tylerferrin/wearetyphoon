@@ -10,14 +10,14 @@
       <a href="#" @click="listenUp()" class="link listenGlitch">LISTEN</a>
       <a href="http://typhoon.merchline.com/" class="link storeGlitch">STORE</a>
       <p @click="showHiddenLinks()" class="moreOptionsGlitch"> + </p>
+      <div v-if="!hideHiddenLinks" class="navBottomBorderContainer">
+        <div v-bind:class="{ navBottomBorder: !hideHiddenLinks}"></div>
+      </div>
     </nav>
-    <div v-if="!hideHiddenLinks" class="navBottomBorderContainer">
-      <div v-bind:class="{ navBottomBorder: !hideHiddenLinks}"></div>
-    </div>
     <ul class="navExtender" v-bind:class="{ hideLinkDisplay: hideHiddenLinks, fastFadeIn: !hideHiddenLinks }">
-      <li><a href="#">Twitter</a></li>
-      <li><a href="#">Facebook</a></li>
-      <li><a href="#">Instagram</a></li>
+      <li><a target="_blank" href="https://twitter.com/wearetyphoon">Twitter</a></li>
+      <li><a target="_blank" href="https://www.facebook.com/wearetyphoon/">Facebook</a></li>
+      <li><a target="_blank" href="https://www.instagram.com/typhoonfamilyvacation/">Instagram</a></li>
     </ul>
     <div class="showListContainer">
       <div class="showList" v-if="listen" v-bind:class="{ fastFadeIn: listen }">
@@ -134,6 +134,7 @@ body
   animation-duration: 2.5s
   animation-timing-function: ease-in
   animation-fill-mode: forwards
+
 nav
   position: absolute
   top: 88.5vh
@@ -141,11 +142,20 @@ nav
   display: flex
   flex-direction: row
   justify-content: flex-end
-  z-index: 6
+  z-index: 100
   padding-bottom: 10px
-  @media screen and (max-width: 768px)
+  @media screen and (max-width: 600px)
+    top: 5vh
+    display: flex
+    flex-direction: row
+    justify-content: center
+    width: 100vw
     right: 0
-    margin: 0 auto
+  @media screen and (orientation: landscape)
+    top: 7.5vh
+  p
+    color: white
+    padding: 0 25px
   a
     padding: 0 25px
     font-size: 14px
@@ -155,13 +165,27 @@ nav
     &:hover
       color: white
       text-decoration: none
-    @media screen and (max-width: 768px)
-      font-size: 13px
-      letter-spacing: 1px
-  p
-    color: white
-    padding: 0 25px
 
+  .navBottomBorderContainer
+    position: absolute
+    top: 37px
+    height: 5px
+    width: 320px
+    color: white
+    z-index: 9
+    @media screen and (max-width: 768px)
+      right: 0
+
+  .navBottomBorder
+    position: relative
+    top: -8px
+    right: 25px
+    height: 2px
+    background: white
+    animation-name: slideOut
+    animation-duration: .5s
+    animation-timing-function: ease-in
+    animation-direction: forwards
 
 .navExtender
   padding: 0
@@ -201,28 +225,6 @@ p
 .hideLinkDisplay
   display: none
 
-.navBottomBorderContainer
-  position: absolute
-  top: 93vh
-  right: 9.5vw
-  height: 5px
-  width: 320px
-  color: white
-  z-index: 9
-  @media screen and (max-width: 768px)
-    right: 0
-
-.navBottomBorder
-  position: relative
-  top: -8px
-  right: 25px
-  height: 2px
-  background: white
-  animation-name: slideOut
-  animation-duration: .5s
-  animation-timing-function: ease-in
-  animation-direction: forwards
-
 @keyframes slideOut
   0%
     width: 0px
@@ -243,7 +245,7 @@ p
   width: 100vw
   display: flex
   flex-direction: column
-  // align-items: center
+  align-items: center
   justify-content: center
   .showList
     display: flex
@@ -253,6 +255,7 @@ p
     z-index: 50
     color: #DAA520
     width: 100vw
+    height: 100vh
     table
       border-collapse: collapse
       margin: 0 05vw 0 15vw
@@ -278,6 +281,12 @@ p
         outline: none
 
 @media screen and (max-width: 600px)
+  .showListContainer
+    justify-content: flex-start
+  .showList
+    flex-direction: column
+    justify-content: center
+    overflow-y: scroll
   td
     display: block
     text-align: center
@@ -316,8 +325,6 @@ p
     content: $string
     opacity: .8
     display: none
-    @media screen and (max-width: 768px)
-      display: none
   &:after
     color: red
     z-index: -2
@@ -328,11 +335,15 @@ p
     top: 1px
   &:hover
     &:before
-      display: block
+      display: inline-block
       animation: glitch .3s cubic-bezier(.25, .46, .45, .94) both infinite
+      @media screen and (max-width: 768px)
+        display: none
     &:after
       display: inline-block
       animation: glitch .3s cubic-bezier(.25, .46, .45, .94) reverse both infinite
+      @media screen and (max-width: 768px)
+        display: none
 
 @keyframes glitch
   0%
@@ -376,6 +387,10 @@ p
   &:after
     left: 25px
     bottom: 0px
+  @media screen and (max-width: 600px)
+    display: none
+  @media screen and (orientation: landscape)
+    display: none
 
 .xGlitch
   @include glitchEffects('X')
