@@ -2,13 +2,13 @@
   <section class="container">
     <div class="moon-container" v-bind:class="{fadeIn: !play}"></div>
     <div class="video-container" v-if="play" v-bind:class="{fadeIn: play}">
-      <iframe id="video" width="100%" height="100%" src="//www.youtube.com/embed/qUJYqhKZrwA?autoplay=1&showinfo=0&controls=0" frameborder="0" allowfullscreen />
+      <iframe id="video" width="100%" height="100%" src="https://www.youtube.com/embed/Og0inPrtfP4?autoplay=1&showinfo=0&controls=0modestbranding=1" frameborder="0" allowfullscreen />
     </div>
-    <nav v-bind:class="{fadeIn: !play}">
+    <nav v-bind:class="{fadeIn: !play, hideMainNav: play && quietMouse}">
       <a href="#" @click="playToggle()" v-if="!play" class="link playGlitch">PLAY</a>
-      <a href="#" @click="playToggle()" v-if="play" class="link stopGlitch" v-bind:class="{fadeIn: play}">STOP</a>
+      <a href="#" @click="playToggle()" v-if="play" class="link stopGlitch">STOP</a>
       <a href="#" @click="listenUp()" class="link listenGlitch">LISTEN</a>
-      <a href="http://typhoon.merchline.com/" class="link storeGlitch">STORE</a>
+      <a href="http://typhoon.merchline.com/" target="_blank" class="link storeGlitch">STORE</a>
       <p @click="showHiddenLinks()" class="moreOptionsGlitch"> + </p>
       <div v-if="!hideHiddenLinks" class="navBottomBorderContainer">
         <div v-bind:class="{ navBottomBorder: !hideHiddenLinks}"></div>
@@ -21,22 +21,12 @@
     </ul>
     <div class="showListContainer">
       <div class="showList" v-if="listen" v-bind:class="{ fastFadeIn: listen }">
-        <table>
-          <tbody>
-            <tr>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr v-for="show in shows">
-              <td>{{ show.date }}</td>
-              <td class="isMobile">{{ show.venue }}</td>
-              <td>{{ show.city }}</td>
-              <td class="tickets"><a :href="show.linkToPurchase"> Tickets </a></td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="showRow" v-for="show in shows">
+          <p>{{ show.date }}</p>
+          <p>{{ show.venue }}</p>
+          <p>{{ show.city }}</p>
+          <p class="tickets"><a :href="show.linkToPurchase" target="_blank"> Tickets </a></p>
+        </div>
       </div>
     </div>
   </section>
@@ -53,6 +43,7 @@ export default {
       play: false,
       listen: false,
       hideHiddenLinks: true,
+      quietMouse: true,
       listenUp: () => {
         this.listen = !this.listen
         this.play = false
@@ -62,10 +53,24 @@ export default {
         this.play = !this.play
         this.listen = false
         this.hideHiddenLinks = true
+        this.play ? this.addMouseEvent() : this.removeMouseEvent()
       },
       showHiddenLinks: () => {
         this.hideHiddenLinks = !this.hideHiddenLinks
+      },
+      addMouseEvent: () => {
+        document.addEventListener('mousemove', this.onMouseMove, false)
+      },
+      removeMouseEvent: () => {
+        document.removeEventListener('mousemove', this.onMouseMove, false)
+      },
+      onMouseMove: () => {
+        this.quietMouse = false
+        setTimeout(() => {
+          this.quietMouse = true
+        }, 2500)
       }
+
     }
   },
   asyncData (context) {
@@ -111,8 +116,9 @@ body
     z-index: 4
     &:after
       content: ""
-      background-image: url('~/assets/moon.gif')
-      background-size: cover
+      background-image: url('~/assets/moon_small.gif')
+      background-size: 500px
+      background-repeat: no-repeat
       background-position: center
       opacity: .45
       position: absolute
@@ -144,6 +150,9 @@ nav
   justify-content: flex-end
   z-index: 100
   padding-bottom: 10px
+  @media screen and (orientation: landscape) and (max-width: 600px)
+    top: 7.5vh
+
   @media screen and (max-width: 600px)
     top: 5vh
     display: flex
@@ -151,8 +160,6 @@ nav
     justify-content: center
     width: 100vw
     right: 0
-  @media screen and (orientation: landscape)
-    top: 7.5vh
   p
     color: white
     padding: 0 25px
@@ -186,6 +193,9 @@ nav
     animation-duration: .5s
     animation-timing-function: ease-in
     animation-direction: forwards
+
+.hideMainNav
+  display: none
 
 .navExtender
   padding: 0
@@ -240,62 +250,42 @@ p
 
 .showListContainer
   position: absolute
-  top: -14px
   height: 100vh
   width: 100vw
   display: flex
   flex-direction: column
-  align-items: center
   justify-content: center
+  z-index: 10
   .showList
     display: flex
-    flex-direction: row
-    justify-content: center
-    position: absolute
-    z-index: 50
-    color: #DAA520
-    width: 100vw
-    height: 100vh
-    table
-      border-collapse: collapse
-      margin: 0 05vw 0 15vw
-    tr
-      height: 75px
-    td
-      text-align: left
-      width: 30vw
-      font-family: 'Times New Roman', serif
-      font-size: 20px
-      font-weight: bold
-      -webkit-font-smoothing: antialiased
-      @media screen and (max-width: 1200px)
-        font-size: 14px
-      @media screen and (max-width: 768px)
-        font-size: 12px
-    a
-      color: #DAA520
-      text-decoration: none
-      &:hover
-        color: #DAA520
-      &:focus
-        outline: none
-
-@media screen and (max-width: 600px)
-  .showListContainer
-    justify-content: flex-start
-  .showList
     flex-direction: column
     justify-content: center
+    height: auto
     overflow-y: scroll
-  td
-    display: block
-    text-align: center
-    font-size: 24px !important
-    width: 50vw !important
-  td.tickets
-    margin-bottom: 24px
-  .isMobile
-    display: none
+    .showRow
+      display: flex
+      flex-direction: row
+      justify-content: space-around
+      margin: 20px 0
+      @media screen and (max-width: 600px)
+        flex-direction: column
+        justify-content: flex-start
+        align-items: center
+      p
+        text-align: center
+        width: 18vw
+        color: darken(gold, 5%)
+        display: inline-block
+        font-size: 16px
+        @media screen and (max-width: 768px)
+          font-size: 14px
+        @media screen and (max-width: 600px)
+          width: 50vh
+        a
+          color: darken(gold, 5%)
+          text-decoration: none
+          &:hover
+            color: inherit
 
 .video-container
   height: 100vh
@@ -389,8 +379,10 @@ p
     bottom: 0px
   @media screen and (max-width: 600px)
     display: none
-  @media screen and (orientation: landscape)
-    display: none
+
+p.moreOptionsGlitch
+  @media (orientation: landscape) and (max-width: 600px)
+    display: none !important
 
 .xGlitch
   @include glitchEffects('X')
