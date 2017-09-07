@@ -2,25 +2,20 @@
   <section class="container">
     <div class="moon-container" v-bind:class="{fadeIn: !play}"></div>
     <div class="video-container" v-if="play" v-bind:class="{fadeIn: play}">
-      <iframe id="video" width="100%" height="100%" src="https://www.youtube.com/embed/Og0inPrtfP4?autoplay=1&showinfo=0&controls=0modestbranding=1" frameborder="0" allowfullscreen />
+      <iframe id="video" width="100%" height="100%" src="https://www.youtube.com/embed/Og0inPrtfP4?rel=0&amp;controls=0&amp;showinfo=0&autoplay=1" frameborder="0" allowfullscreen></iframe>
     </div>
-    <nav v-bind:class="{fadeIn: !play, hideMainNav: play && quietMouse}">
-      <a href="#" @click="playToggle()" v-if="!play" class="link playGlitch">PLAY</a>
-      <a href="#" @click="playToggle()" v-if="play" class="link stopGlitch">STOP</a>
-      <a href="#" @click="listenUp()" class="link listenGlitch">LISTEN</a>
+    <nav v-bind:class="{fadeIn: !play}" v-if="!listen">
+      <a href="#" @click="playToggle()" class="link listenGlitch">LISTEN</a>
+      <a href="#" @click="listenUp()" class="link attendGlitch">ATTEND</a>
       <a href="http://typhoon.merchline.com/" target="_blank" class="link storeGlitch">STORE</a>
-      <p @click="showHiddenLinks()" class="moreOptionsGlitch"> + </p>
-      <div v-if="!hideHiddenLinks" class="navBottomBorderContainer">
-        <div v-bind:class="{ navBottomBorder: !hideHiddenLinks}"></div>
-      </div>
     </nav>
-    <ul class="navExtender" v-bind:class="{ hideLinkDisplay: hideHiddenLinks, fastFadeIn: !hideHiddenLinks }">
-      <li><a target="_blank" href="https://twitter.com/wearetyphoon">Twitter</a></li>
-      <li><a target="_blank" href="https://www.facebook.com/wearetyphoon/">Facebook</a></li>
-      <li><a target="_blank" href="https://www.instagram.com/typhoonfamilyvacation/">Instagram</a></li>
-    </ul>
-    <div class="showListContainer">
-      <div class="showList" v-if="listen" v-bind:class="{ fastFadeIn: listen }">
+    <nav class="datesNav" v-bind:class="{fadeIn: !play}" v-if="listen">
+      <a href="#" @click="playToggle()" class="link listenGlitch">LISTEN</a>
+      <a href="#" @click="listenUp()" class="link attendGlitch">ATTEND</a>
+      <a href="http://typhoon.merchline.com/" target="_blank" class="link storeGlitch">STORE</a>
+    </nav>
+    <div class="showListContainer" v-if="listen">
+      <div class="showList" v-bind:class="{ fastFadeIn: listen }">
         <div class="showRow" v-for="show in shows">
           <p>{{ show.date }}</p>
           <p>{{ show.venue }}</p>
@@ -43,7 +38,6 @@ export default {
       play: false,
       listen: false,
       hideHiddenLinks: true,
-      quietMouse: true,
       listenUp: () => {
         this.listen = !this.listen
         this.play = false
@@ -53,24 +47,7 @@ export default {
         this.play = !this.play
         this.listen = false
         this.hideHiddenLinks = true
-        this.play ? this.addMouseEvent() : this.removeMouseEvent()
-      },
-      showHiddenLinks: () => {
-        this.hideHiddenLinks = !this.hideHiddenLinks
-      },
-      addMouseEvent: () => {
-        document.addEventListener('mousemove', this.onMouseMove, false)
-      },
-      removeMouseEvent: () => {
-        document.removeEventListener('mousemove', this.onMouseMove, false)
-      },
-      onMouseMove: () => {
-        this.quietMouse = false
-        setTimeout(() => {
-          this.quietMouse = true
-        }, 2500)
       }
-
     }
   },
   asyncData (context) {
@@ -121,7 +98,7 @@ body
       background-repeat: no-repeat
       background-position: center
       opacity: .45
-      position: absolute
+      position: fixed
       top: 0
       left: 0
       bottom: 0
@@ -142,7 +119,7 @@ body
   animation-fill-mode: forwards
 
 nav
-  position: absolute
+  position: fixed
   top: 88.5vh
   right: 9.5vw
   display: flex
@@ -173,67 +150,40 @@ nav
       color: white
       text-decoration: none
 
-  .navBottomBorderContainer
-    position: absolute
-    top: 37px
-    height: 5px
-    width: 320px
-    color: white
-    z-index: 9
-    @media screen and (max-width: 768px)
-      right: 0
-
-  .navBottomBorder
-    position: relative
-    top: -8px
-    right: 25px
-    height: 2px
-    background: white
-    animation-name: slideOut
-    animation-duration: .5s
-    animation-timing-function: ease-in
-    animation-direction: forwards
-
-.hideMainNav
-  display: none
-
-.navExtender
-  padding: 0
-  margin: 0
-  color: white
-  display: inline-block
-  list-style-type: none
-  position: absolute
-  top: 92.5vh
+.datesNav
+  position: fixed
+  top: 10.5vh
   right: 9.5vw
-  z-index: 10
-  font-size: 12px
-  @media screen and (max-width: 768px)
+  display: flex
+  flex-direction: row
+  justify-content: flex-end
+  z-index: 100
+  padding-bottom: 10px
+  @media screen and (orientation: landscape) and (max-width: 600px)
+    top: 7.5vh
+
+  @media screen and (max-width: 600px)
+    top: 5vh
+    display: flex
+    flex-direction: row
+    justify-content: center
+    width: 100vw
     right: 0
-li
-  position: relative
-  top: 15px
-  padding: 0 0 0 25px
-  display: inline-block
-  float: right
+  p
+    color: white
+    padding: 0 25px
   a
+    padding: 0 25px
+    font-size: 14px
+    letter-spacing: 2px
     color: white
     text-decoration: none
-    &:hover, &:focus
+    &:hover
       color: white
       text-decoration: none
-li:first-of-type
-  padding-right: 25px
-p
-  display: inline-block
-  position: relative
-  top: -3px
-  margin: 0
-  &:hover
-    cursor: pointer
 
-.hideLinkDisplay
-  display: none
+
+
 
 @keyframes slideOut
   0%
@@ -256,21 +206,32 @@ p
   flex-direction: column
   justify-content: center
   z-index: 10
+  margin-bottom: 200px
+  @media (max-width: 600px)
+    height: auto
   .showList
     display: flex
     flex-direction: column
     justify-content: center
     height: auto
     overflow-y: scroll
+    position: relative
     .showRow
       display: flex
       flex-direction: row
       justify-content: space-around
+      position: relative
+      top: 125px
       margin: 20px 0
       @media screen and (max-width: 600px)
+        position: relative
+        top: 100px
         flex-direction: column
         justify-content: flex-start
         align-items: center
+        margin: 25px 0
+        p
+          margin: 0
       p
         text-align: center
         width: 18vw
@@ -356,21 +317,21 @@ p
     color: orange
 
 /// NAV GLITCH CLASSES
-.playGlitch
-  @include glitchEffects('PLAY')
+.listenGlitch
+  @include glitchEffects('LISTEN')
 
 .stopGlitch
   @include glitchEffects('STOP')
 
-.listenGlitch
-  @include glitchEffects('LISTEN')
+.attendGlitch
+  @include glitchEffects('ATTEND')
   &:after
-    left: 118.5px
+    left: 135.5px
 
 .storeGlitch
   @include glitchEffects('STORE')
   &:after
-    left: 228.5px
+    left: 250.5px
 
 .moreOptionsGlitch
   @include glitchEffects('+')
