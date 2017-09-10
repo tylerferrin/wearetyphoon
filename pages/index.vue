@@ -1,8 +1,11 @@
 <template>
   <section class="container">
-    <div class="moon-container" v-bind:class="{fadeIn: !play}"></div>
+    <div class="moon-container" v-bind:class="{fadeIn: !play}" @click="moonEgg()"></div>
     <div class="video-container" v-if="play" v-bind:class="{fadeIn: play}">
       <iframe id="video" width="100%" height="100%" src="https://www.youtube.com/embed/Og0inPrtfP4?rel=0&amp;controls=0&amp;showinfo=0&autoplay=1" frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="video-container" v-if="egg" v-bind:class="{fadeIn: play}">
+      <iframe src="https://player.vimeo.com/video/233221969" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
     </div>
     <nav v-bind:class="{fadeIn: !play}" v-if="!listen">
       <a href="#" @click="playToggle()" class="link listenGlitch">LISTEN</a>
@@ -37,16 +40,21 @@ export default {
     return {
       play: false,
       listen: false,
-      hideHiddenLinks: true,
+      egg: false,
       listenUp: () => {
         this.listen = !this.listen
         this.play = false
-        this.hideHiddenLinks = true
+        this.egg = false
       },
       playToggle: () => {
         this.play = !this.play
         this.listen = false
-        this.hideHiddenLinks = true
+        this.egg = false
+      },
+      moonEgg: () => {
+        this.egg = true
+        this.listen = false
+        this.play = false
       }
     }
   },
