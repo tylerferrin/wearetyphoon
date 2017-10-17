@@ -9,12 +9,12 @@
     </div>
     <nav v-bind:class="{fadeIn: !play}" v-if="!listen">
       <a href="#" @click="playToggle()" class="link listenGlitch">LISTEN</a>
-      <a href="#" @click="listenUp()" class="link attendGlitch">ATTEND</a>
+      <a href="#" @click="listenUp()" class="link attendGlitch">LIVE</a>
       <a href="http://typhoon.merchline.com/" target="_blank" class="link storeGlitch">STORE</a>
     </nav>
     <nav class="datesNav" v-bind:class="{fadeIn: !play}" v-if="listen">
       <a href="#" @click="playToggle()" class="link listenGlitch">LISTEN</a>
-      <a href="#" @click="listenUp()" class="link attendGlitch">ATTEND</a>
+      <a href="#" @click="listenUp()" class="link attendGlitch">LIVE</a>
       <a href="http://typhoon.merchline.com/" target="_blank" class="link storeGlitch">STORE</a>
     </nav>
     <div class="showListContainer" v-if="listen">
@@ -212,16 +212,16 @@ nav
   width: 100vw
   display: flex
   flex-direction: column
-  justify-content: center
+  justify-content: space-around
   z-index: 10
-  margin-bottom: 200px
+  // margin-bottom: 200px
   @media (max-width: 600px)
     height: auto
   .showList
     display: flex
     flex-direction: column
-    justify-content: center
-    height: auto
+    justify-content: start
+    height: 100vh
     overflow-y: scroll
     position: relative
     .showRow
@@ -332,7 +332,7 @@ nav
   @include glitchEffects('STOP')
 
 .attendGlitch
-  @include glitchEffects('ATTEND')
+  @include glitchEffects('LIVE')
   &:after
     left: 135.5px
 
